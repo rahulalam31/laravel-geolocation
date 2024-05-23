@@ -20,3 +20,5 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [GeolocationLogController::class, 'index']);
+
+Route::post('/', [GeolocationLogController::class, 'store']);
