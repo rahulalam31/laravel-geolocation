@@ -17,7 +17,6 @@ class GeolocationLogController extends Controller
 
     public function index(Request $request)
     {
-        if($request->input('ip')){
         $ip = $request->input('ip', $request->ip());
         // dd($request);
         $geoData = $this->geoService->getGeolocation($ip);
@@ -28,7 +27,7 @@ class GeolocationLogController extends Controller
         } else{
             return view('welcome', ['error' => 'Invalid Ip address.']);
         }
-    }
+
 
         return view('welcome', ['error' => 'Unable to fetch geolocation data.']);
     }
