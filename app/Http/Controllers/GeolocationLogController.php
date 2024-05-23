@@ -17,40 +17,43 @@ class GeolocationLogController extends Controller
 
     public function index(Request $request)
     {
+        if($request->input('ip')){
         $ip = $request->input('ip', $request->ip());
+        // dd($request);
         $geoData = $this->geoService->getGeolocation($ip);
 
-        // dd($geoData);
         if ($geoData) {
-            return view('welcome', [
-                'ip' => $ip,
-                'country' => $geoData['country_name'],
-                'region' => $geoData['state_prov'],
-                'city' => $geoData['city'],
-                'latitude' => $geoData['latitude'],
-                'longitude' => $geoData['longitude'],
-            ]);
+            return view('welcome', compact('geoData'));
+
+        } else{
+            return view('welcome', ['error' => 'Invalid Ip address.']);
         }
+    }
 
         return view('welcome', ['error' => 'Unable to fetch geolocation data.']);
     }
 
     public function store(Request $request)
     {
-        $ip = $request->ip();
+        // dd($request->ip);
+        $ip = $request->ip;
         $geoData = $this->geoService->getGeolocation($ip);
+        // dd($geoData);
 
-        if ($geoData) {
-            GeolocationLog::create([
+        if (isset($geoData)) {
+            $geoData = GeolocationLog::create([
                 'ip_address' => $ip,
-                'country' => $geoData['country'],
-                'region' => $geoData['region'],
+                'country' => $geoData['country_name'],
+                'region' => $geoData['state_prov'],
                 'city' => $geoData['city'],
                 'latitude' => $geoData['latitude'],
                 'longitude' => $geoData['longitude'],
             ]);
+
+            return view('welcome', compact('geoData'));
+
         }
 
-        return response()->json(['message' => 'Geolocation data stored successfully.']);
+        // return response()->json(['message' => 'Geolocation data stored successfully.']);
     }
 }
