@@ -19,7 +19,7 @@ class AbstractGeolocationService implements GeolocationServiceInterface
     {
         return Cache::remember("geolocation_{$ip}", 3600, function () use ($ip) {
             try {
-                $response = Http::get("https://api.ipgeolocation.io/ipgeo?apiKey={$this->apiKey}&ip_address={$ip}");
+                $response = Http::get("https://api.ipgeolocation.io/ipgeo?apiKey={$this->apiKey}&ip={$ip}");
 
                 if ($response->successful()) {
                     \Log::info('API Response', ['response' => $response->json()]);
